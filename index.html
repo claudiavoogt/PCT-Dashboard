@@ -308,6 +308,56 @@
   table.data-table td{padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
   table.data-table tr:hover td{background:var(--surface-sunken);}
 
+  /* Everest comparison */
+  .everest-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:24px 22px 20px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:14px;
+  }
+  .everest-headline{
+    font-family:'Big Shoulders',sans-serif;
+    font-weight:800;
+    font-size:clamp(48px,9vw,84px);
+    line-height:.9;
+    color:var(--rust);
+    margin:0;
+  }
+  .everest-tag{
+    font-family:'Big Shoulders',sans-serif;
+    font-weight:700;
+    font-size:20px;
+    color:var(--ink);
+    margin:0;
+  }
+  .everest-row{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:6px;
+    max-width:640px;
+  }
+  .mountain{display:block;}
+  .everest-caption{
+    font-size:14px;
+    color:var(--ink-muted);
+    max-width:520px;
+    margin:0;
+  }
+  .everest-caption b{color:var(--ink);font-weight:600;}
+  .everest-note{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-faint);
+    margin:0;
+  }
+
   footer{
     margin-top:44px;
     padding-top:16px;
@@ -384,6 +434,12 @@
   </section>
 
   <section>
+    <h2 id="t-s2b-h2">Hoogtemeters versus de Mount Everest</h2>
+    <p class="section-sub" id="t-s2b-sub">Totaal netto omhoog geklommen op het traject</p>
+    <div class="everest-card" id="everestWrap"></div>
+  </section>
+
+  <section>
     <h2 id="t-s3-h2">Afstand per week</h2>
     <p class="section-sub" id="t-s3-sub">Opgeteld aantal km per weekblok sinds de start</p>
     <div class="chart-card">
@@ -429,6 +485,10 @@
       heroDays: function(n){ return n + ' dagen op pad'; },
       s1h2:'Overzicht', s1sub:'Alle geregistreerde activiteiten op het traject',
       s2h2:'Hoogteprofiel per dag', s2sub:'Hoogtemeters (stijging) per dag over het hele traject &mdash; beweeg over de grafiek voor details',
+      s2bh2:'Hoogtemeters versus de Mount Everest', s2bsub:'Totaal netto omhoog geklommen op het traject',
+      everestTag: 'keer de Mount Everest beklommen',
+      everestCaption: function(tot, ev){ return '<b>'+tot+' hoogtemeters</b> in totaal &mdash; net zoveel als '+ev+' keer de Mount Everest (8.849 m) beklimmen.'; },
+      everestNote: 'Hoogte Mount Everest, zeeniveau tot top: 8.849 m',
       s3h2:'Afstand per week', s3sub:'Opgeteld aantal km per weekblok sinds de start',
       s4h2:'Uitschieters', s4sub:'De zwaarste dagen op het traject',
       kpi:{days:'Dagen gelopen', daysSub:function(n){return n+' activiteiten';},
@@ -452,6 +512,10 @@
       heroDays: function(n){ return n + ' days on trail'; },
       s1h2:'Overview', s1sub:'All recorded activities on the trail',
       s2h2:'Elevation profile per day', s2sub:'Elevation gain per day across the whole trail &mdash; hover the chart for details',
+      s2bh2:'Elevation gain vs. Mount Everest', s2bsub:'Total net climbing on the trail',
+      everestTag: 'times up Mount Everest',
+      everestCaption: function(tot, ev){ return '<b>'+tot+' m of elevation gain</b> in total &mdash; the same as climbing Mount Everest (8,849 m) '+ev+' times.'; },
+      everestNote: 'Mount Everest height, sea level to summit: 8,849 m',
       s3h2:'Distance per week', s3sub:'Total km per week block since the start',
       s4h2:'Standout days', s4sub:'The toughest days on the trail',
       kpi:{days:'Days hiked', daysSub:function(n){return n+' activities';},
@@ -475,6 +539,10 @@
       heroDays: function(n){ return n + ' Tage unterwegs'; },
       s1h2:'Übersicht', s1sub:'Alle erfassten Aktivitäten auf dem Trail',
       s2h2:'Höhenprofil pro Tag', s2sub:'Höhenmeter pro Tag über den gesamten Trail &mdash; für Details über die Grafik fahren',
+      s2bh2:'Höhenmeter im Vergleich zum Mount Everest', s2bsub:'Insgesamt bewältigte Höhenmeter auf dem Trail',
+      everestTag: 'Mal den Mount Everest bestiegen',
+      everestCaption: function(tot, ev){ return '<b>'+tot+' Höhenmeter</b> insgesamt &mdash; so viel wie '+ev+' Mal den Mount Everest (8.849 m) zu besteigen.'; },
+      everestNote: 'Höhe Mount Everest, Meeresspiegel bis Gipfel: 8.849 m',
       s3h2:'Distanz pro Woche', s3sub:'Summierte Kilometer pro Wochenblock seit dem Start',
       s4h2:'Highlights', s4sub:'Die härtesten Tage auf dem Trail',
       kpi:{days:'Gelaufene Tage', daysSub:function(n){return n+' Aktivitäten';},
@@ -516,6 +584,8 @@
     document.getElementById('t-s1-sub').innerHTML = s.s1sub;
     document.getElementById('t-s2-h2').textContent = s.s2h2;
     document.getElementById('t-s2-sub').innerHTML = s.s2sub;
+    document.getElementById('t-s2b-h2').textContent = s.s2bh2;
+    document.getElementById('t-s2b-sub').innerHTML = s.s2bsub;
     document.getElementById('t-s3-h2').textContent = s.s3h2;
     document.getElementById('t-s3-sub').innerHTML = s.s3sub;
     document.getElementById('t-s4-h2').textContent = s.s4h2;
@@ -545,6 +615,38 @@
       el.innerHTML = '<span class="label">'+k.label+'</span><span class="value mono">'+k.value+'</span><span class="sub">'+k.sub+'</span>';
       kpiGrid.appendChild(el);
     });
+  }
+
+  // ---------- Everest comparison ----------
+  var EVEREST_M = 8849;
+  function mountainSVG(fraction){
+    // fraction: 1 = full mountain, <1 = clipped from the left at that fraction
+    var id = 'mclip'+Math.round(fraction*1000)+Math.random().toString(36).slice(2,7);
+    var clip = fraction < 1 ? '<clipPath id="'+id+'"><rect x="0" y="0" width="'+(40*fraction)+'" height="32"/></clipPath>' : '';
+    var open = fraction < 1 ? '<g clip-path="url(#'+id+')">' : '<g>';
+    return '<svg class="mountain" viewBox="0 0 40 32" width="30" height="24" aria-hidden="true">'+
+      '<defs>'+clip+'</defs>'+
+      open+
+      '<polygon points="20,2 38,30 2,30" fill="var(--pine)"/>'+
+      '<polygon points="20,2 25,12.5 15,12.5" fill="var(--bg)" opacity="0.9"/>'+
+      '</g>'+
+      '</svg>';
+  }
+  function renderEverest(){
+    var s = T();
+    var wrapEl = document.getElementById('everestWrap');
+    var ratio = summary.tot_stijging / EVEREST_M;
+    var full = Math.floor(ratio);
+    var frac = ratio - full;
+    var icons = '';
+    for(var i=0;i<full;i++){ icons += mountainSVG(1); }
+    if(frac > 0.03){ icons += mountainSVG(frac); }
+    wrapEl.innerHTML =
+      '<p class="everest-headline mono">'+fmtNum(ratio,1)+'&times;</p>'+
+      '<p class="everest-tag">'+s.everestTag+'</p>'+
+      '<div class="everest-row">'+icons+'</div>'+
+      '<p class="everest-caption">'+s.everestCaption(fmtNum(summary.tot_stijging), fmtNum(ratio,1))+'</p>'+
+      '<p class="everest-note mono">'+s.everestNote+'</p>';
   }
 
   // ---------- Tooltip helper ----------
@@ -726,6 +828,7 @@
   function renderAll(){
     renderStatic();
     renderKPIs();
+    renderEverest();
     renderElevChart();
     renderWeekChart();
     renderStandouts();
